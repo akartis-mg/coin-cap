@@ -210,7 +210,7 @@ function DashboardContent() {
             <Toolbar />
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
               <Grid container spacing={3}>
-                {/* Chart */}
+              
 
                 <Grid item xs={12} md={4} lg={3}>
                   <Paper
@@ -221,7 +221,7 @@ function DashboardContent() {
                       height: "auto",
                     }}
                   >
-                    {/* <Deposits /> */}
+                    {/* <Markets /> */}
                     <Markets
                       data={market}
                       setSelectedMarket={setSelectedMarket}
@@ -237,7 +237,7 @@ function DashboardContent() {
                       height: "auto",
                     }}
                   >
-                    {/* <Chart /> */}
+                    {/* <Exchanges /> */}
                     <Exchanges 
                     data={exchanges}
                     setSelectedExchange={setSelectedExchange} />
@@ -245,12 +245,12 @@ function DashboardContent() {
                 </Grid>
                 {/* Recent Deposits */}
 
-                {/* Recent Orders */}
+                {/* Recent chart */}
                 <Grid item xs={12}>
                   <Paper
                     sx={{ p: 2, display: "flex", flexDirection: "column" }}
                   >
-                    {/* <Orders /> */}
+                    {/* <chart /> */}
 
                     <Chart
                       market={market}

@@ -8,11 +8,6 @@ import TableRow from "@mui/material/TableRow";
 import TableContainer from "@mui/material/TableContainer";
 import axios from "axios";
 
-
-// function createData(rank, exchangeId, exchangeUrl, name, percentTotalVolume, volumeUsd) {
-//     return { rank, exchangeId, exchangeUrl, name, percentTotalVolume, volumeUsd };
-//   }
-
 function Markets({ data, setSelectedMarket }) {
 
 
@@ -28,8 +23,8 @@ function Markets({ data, setSelectedMarket }) {
           </TableHead>
           <TableBody>
             {data &&
-              data.map((m) => (
-                <TableRow key={m.exchangeId} onClick={()=>setSelectedMarket(m)}>
+              data.map((m ,i) => (
+                <TableRow hover key={i} onClick={()=>setSelectedMarket(m)}>
                   <TableCell>
                     {m.baseSymbol}/{m.quoteSymbol}
                   </TableCell>

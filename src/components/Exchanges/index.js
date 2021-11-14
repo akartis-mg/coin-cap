@@ -20,9 +20,10 @@ function Exchanges({ data, setSelectedExchange }) {
           </TableHead>
           <TableBody>
             {data &&
-              data.map((ex) => (
+              data.map((ex ,i ) => (
                 <TableRow
-                  key={ex.exchangeId}
+                  key={i}
+                  hover
                   onClick={() => setSelectedExchange(ex)}
                 >
                   <TableCell>{ex.rank}</TableCell>
