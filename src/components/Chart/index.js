@@ -17,43 +17,19 @@ export default function Chart() {
     setValue(newValue);
   };
 
-  //
-
   const chartProperties = {
     width: 1000,
     height: 600,
     crosshair: {
       mode: "normal",
     },
+    timeScale: {
+        timeVisible: true,
+    secondsVisible: false,
+    },
   };
-  //const domElement = document.getElementsByClassName("eto");
-  //
+
   const formatPercent = (number) => `${new Number(number).toFixed(2)}%`;
-
-//   useEffect(() => {
-//     const chart = createChart(ref.current, chartProperties);
-//     const candleSeries = chart.addCandlestickSeries();
-//     async function fetchData() {
-//       const res = await axios.get(
-//         "/candles?exchange=binance&interval=h1&baseId=bitcoin&quoteId=tether"
-//       );
-
-//       const cdata = res.data.map((d) => {
-//         //console.log(parseFloat(formatPercent(d.open)))
-//         return {
-//           time: String(moment(d.period, "x").format("YYYY-MM-DD")),
-//           open: parseFloat(formatPercent(d.open)),
-//           high: parseFloat(formatPercent(d.high)),
-//           low: parseFloat(formatPercent(d.low)),
-//           close: parseFloat(formatPercent(d.close)),
-//         };
-//       });
-//       console.log("result", res);
-//       //candleSeries.setData(cdata);
-//     }
-
-//     fetchData();
-//   }, []);
 
   useEffect(() => {
     chart.current = createChart(chartContainerRef.current, {
@@ -79,7 +55,10 @@ export default function Chart() {
       },
       timeScale: {
         borderColor: "#485c7b",
+        timeVisible: true,
+        secondsVisible: false,
       },
+      
     });
 
     //console.log(chart.current);
@@ -97,24 +76,22 @@ export default function Chart() {
       const res = await axios.get(
         "/candles?exchange=binance&interval=h1&baseId=bitcoin&quoteId=tether"
       );
-let myArr = [];
-      const cdata = res.data.data
-      .sort((a,b)=>a.period > b.period ? 1 : -1)
-      .map((d) => {
-        //console.log(parseFloat(formatPercent(d.open)))
-        return {
-          time: d.period,
-          open: parseFloat(formatPercent(d.open)),
-          high: parseFloat(formatPercent(d.high)),
-          low: parseFloat(formatPercent(d.low)),
-          close: parseFloat(formatPercent(d.close)),
-        };
-      });
-      myArr.push(cdata)
-      candleSeries.setData(myArr[0]);
-      //console.log("result", myArr[0]);
-    }
 
+      const cdata = res.data.data
+        .sort((a, b) => (a.period > b.period ? 1 : -1))
+        .map((d) => {
+          //console.log(parseFloat(formatPercent(d.open)))
+          return {
+            time: d.period/1000,
+            open: parseFloat(formatPercent(d.open)),
+            high: parseFloat(formatPercent(d.high)),
+            low: parseFloat(formatPercent(d.low)),
+            close: parseFloat(formatPercent(d.close)),
+          };
+        });
+
+      candleSeries.setData(cdata);
+    }
 
     fetchData();
 
@@ -155,7 +132,7 @@ let myArr = [];
           </TabList>
         </Box>
         <TabPanel value="1">
-          <div ref={chartContainerRef} style={{flex:1}}></div>
+          <div ref={chartContainerRef} style={{ flex: 1 }}></div>
         </TabPanel>
         <TabPanel value="2">Prices</TabPanel>
       </TabContext>
