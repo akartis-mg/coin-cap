@@ -23,7 +23,7 @@ import axios from "axios";
 import Markets from "../Markets";
 import Exchanges from "../Exchanges";
 import request from "../../Request";
-import Chart from "../Chart";
+import Chart from "../Chart/index";
 
 //import Chart from './Chart';
 //import Deposits from './Deposits';
@@ -118,6 +118,7 @@ function DashboardContent() {
     async function fetchData() {
       const res = await axios.get("/markets");
       setMarket(res.data.data);
+      setSelectedMarket(res.data.data[0])
     }
     fetchData();
   }, []);
@@ -126,6 +127,7 @@ function DashboardContent() {
     async function fetchData() {
       const res = await axios.get("/exchanges");
       setExchanges(res.data.data);
+      setSelectedExchange(res.data.data[0])
     }
     fetchData();
   }, []);
@@ -238,9 +240,9 @@ function DashboardContent() {
                     }}
                   >
                     {/* <Chart /> */}
-                    <Exchanges 
-                    data={exchanges}
-                    setSelectedExchange={setSelectedExchange} />
+                    <Exchanges
+                      data={exchanges}
+                      setSelectedExchange={setSelectedExchange} />
                   </Paper>
                 </Grid>
                 {/* Recent Deposits */}

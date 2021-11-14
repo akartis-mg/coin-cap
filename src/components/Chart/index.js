@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
@@ -12,6 +12,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Grid from "@mui/material/Grid";
+
 export default function Chart({
   market,
   selectedMarket,
@@ -24,12 +25,106 @@ export default function Chart({
   const chart = useRef();
   const resizeObserver = useRef();
   const [value, setValue] = React.useState("1");
+  const candleSeries = useRef();
+
+  const [test, setTest] = useState();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
   const formatPercent = (number) => `${new Number(number).toFixed(2)}%`;
+
+  async function fetchData() {
+    const res = await axios.get(
+      "/candles?exchange=binance&interval=h1&baseId=ethereum&quoteId=tether"
+    );
+
+    const cdata = res.data.data
+      .sort((a, b) => (a.period > b.period ? 1 : -1))
+      .map((d) => {
+        return {
+          time: d.period / 1000,
+          open: parseFloat(formatPercent(d.open)),
+          high: parseFloat(formatPercent(d.high)),
+          low: parseFloat(formatPercent(d.low)),
+          close: parseFloat(formatPercent(d.close)),
+        };
+      });
+
+    setTest(cdata);
+
+    handleDataChart(cdata);
+  }
+
+  const handleDataChart = (cdata) => {
+    candleSeries.current.setData(cdata);
+  }
+
+  async function fetchDataBase(baseId, quoteId) {
+    let eId;
+
+    if (selectedMarket) {
+      eId = selectedExchange.exchangeId;
+    } else {
+      eId = "binance"
+    }
+
+    const res = await axios.get(
+      `/candles?exchange=${eId}&interval=h1&baseId=${baseId}&quoteId=${quoteId}`
+    );
+
+    const cdata = res.data.data
+      .sort((a, b) => (a.period > b.period ? 1 : -1))
+      .map((d) => {
+        //console.log(parseFloat(formatPercent(d.open)))
+        return {
+          time: d.period / 1000,
+          open: parseFloat(formatPercent(d.open)),
+          high: parseFloat(formatPercent(d.high)),
+          low: parseFloat(formatPercent(d.low)),
+          close: parseFloat(formatPercent(d.close)),
+        };
+      });
+
+    setTest(cdata);
+
+    handleDataChart(cdata);
+  }
+
+  async function fetchDataExchange(exchangeId) {
+    let bId;
+    let qId;
+
+    if (selectedMarket) {
+      bId = selectedMarket.baseId;
+      qId = selectedMarket.quoteId;
+    } else {
+      bId = "bitcoin"
+      qId = "tether"
+    }
+
+    const res = await axios.get(
+      `/candles?exchange=${exchangeId}&interval=h1&baseId=${bId}&quoteId=${qId}`
+    );
+
+    const cdata = res.data.data
+      .sort((a, b) => (a.period > b.period ? 1 : -1))
+      .map((d) => {
+        //console.log(parseFloat(formatPercent(d.open)))
+        return {
+          time: d.period / 1000,
+          open: parseFloat(formatPercent(d.open)),
+          high: parseFloat(formatPercent(d.high)),
+          low: parseFloat(formatPercent(d.low)),
+          close: parseFloat(formatPercent(d.close)),
+        };
+      });
+
+    setTest(cdata);
+
+    handleDataChart(cdata);
+  }
 
   useEffect(() => {
     if (value == "1") {
@@ -61,9 +156,7 @@ export default function Chart({
         },
       });
 
-      //console.log(chart.current);
-
-      const candleSeries = chart.current.addCandlestickSeries({
+      candleSeries.current = chart.current.addCandlestickSeries({
         upColor: "#4bffb5",
         downColor: "#ff4976",
         borderDownColor: "#ff4976",
@@ -72,40 +165,9 @@ export default function Chart({
         wickUpColor: "#838ca1",
       });
 
-      async function fetchData() {
-        const res = await axios.get(
-          "/candles?exchange=binance&interval=h1&baseId=bitcoin&quoteId=tether"
-        );
-
-        const cdata = res.data.data
-          .sort((a, b) => (a.period > b.period ? 1 : -1))
-          .map((d) => {
-            //console.log(parseFloat(formatPercent(d.open)))
-            return {
-              time: d.period / 1000,
-              open: parseFloat(formatPercent(d.open)),
-              high: parseFloat(formatPercent(d.high)),
-              low: parseFloat(formatPercent(d.low)),
-              close: parseFloat(formatPercent(d.close)),
-            };
-          });
-
-        candleSeries.setData(cdata);
-      }
-
       fetchData();
     }
-    //candleSeries.setData(priceData);
-
-    // const areaSeries = chart.current.addAreaSeries({
-    //   topColor: 'rgba(38,198,218, 0.56)',
-    //   bottomColor: 'rgba(38,198,218, 0.04)',
-    //   lineColor: 'rgba(38,198,218, 1)',
-    //   lineWidth: 2
-    // });
-
-    // areaSeries.setData(areaData);
-  }, [value]);
+  }, []);
 
   // Resize chart on container resizes.
   useEffect(() => {
@@ -124,11 +186,14 @@ export default function Chart({
 
   const handleChangeMarket = (event) => {
     setSelectedMarket(event.target.value);
+
+    fetchDataBase(event.target.value.baseId, event.target.value.quoteId);
   };
 
   const handleChangeExchange = (event) => {
     setSelectedExchange(event.target.value);
-    
+
+    fetchDataExchange(event.target.value.exchangeId);
   };
 
   return (
@@ -164,7 +229,7 @@ export default function Chart({
                     ))}
                 </Select>
               </FormControl>
-              <FormControl style={{ margin: 10 }}  sx={{ m: 1, minWidth: 120 }}>
+              <FormControl style={{ margin: 10 }} sx={{ m: 1, minWidth: 120 }}>
                 <InputLabel id="demo-simple-select-label">Exchange</InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
