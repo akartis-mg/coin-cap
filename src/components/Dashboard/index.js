@@ -16,14 +16,11 @@ import Paper from "@mui/material/Paper";
 import Link from "@mui/material/Link";
 import MenuIcon from "@mui/icons-material/Menu";
 import Switch from "@mui/material/Switch";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import { mainListItems } from "../ListItems";
 import axios from "axios";
 import Markets from "../Markets";
 import Exchanges from "../Exchanges";
 import request from "../../Request";
-import Chart from "../Chart";
+import Chart from "../Chart/index";
 
 //import Chart from './Chart';
 //import Deposits from './Deposits';
@@ -118,6 +115,7 @@ function DashboardContent() {
     async function fetchData() {
       const res = await axios.get("/markets");
       setMarket(res.data.data);
+      setSelectedMarket(res.data.data[0]);
     }
     fetchData();
   }, []);
@@ -126,18 +124,19 @@ function DashboardContent() {
     async function fetchData() {
       const res = await axios.get("/exchanges");
       setExchanges(res.data.data);
+      setSelectedExchange(res.data.data[0]);
     }
     fetchData();
   }, []);
 
   useEffect(() => {
     setExchanges(exchanges);
-    setSelectedExchange(exchanges[0])
+    setSelectedExchange(exchanges[0]);
   }, [exchanges]);
 
   useEffect(() => {
     setMarket(market);
-    setSelectedMarket(market[0])
+    setSelectedMarket(market[0]);
   }, [market]);
 
   return (
@@ -210,8 +209,6 @@ function DashboardContent() {
             <Toolbar />
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
               <Grid container spacing={3}>
-              
-
                 <Grid item xs={12} md={4} lg={3}>
                   <Paper
                     sx={{
@@ -238,9 +235,10 @@ function DashboardContent() {
                     }}
                   >
                     {/* <Exchanges /> */}
-                    <Exchanges 
-                    data={exchanges}
-                    setSelectedExchange={setSelectedExchange} />
+                    <Exchanges
+                      data={exchanges}
+                      setSelectedExchange={setSelectedExchange}
+                    />
                   </Paper>
                 </Grid>
                 {/* Recent Deposits */}

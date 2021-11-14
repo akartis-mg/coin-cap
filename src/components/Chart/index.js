@@ -6,7 +6,6 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import { createChart, CrosshairMode } from "lightweight-charts";
 import axios from "axios";
-
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -72,10 +71,9 @@ export default function Chart({
         wickUpColor: "#838ca1",
       });
     }
-
   }, [value]);
 
-  async function fetchData(baseID, quoteID , exchangeID) {
+  async function fetchData(baseID, quoteID, exchangeID) {
     const res = await axios.get(
       `/candles?exchange=${exchangeID}&interval=h1&baseId=${baseID}&quoteId=${quoteID}`
     );
@@ -102,7 +100,11 @@ export default function Chart({
   useEffect(() => {
     selectedMarket &&
       selectedExchange &&
-      fetchData(selectedMarket.baseId, selectedMarket.quoteId , selectedExchange.exchangeId );
+      fetchData(
+        selectedMarket.baseId,
+        selectedMarket.quoteId,
+        selectedExchange.exchangeId
+      );
   }, [selectedMarket, selectedExchange]);
 
   // Resize chart on container resizes.
