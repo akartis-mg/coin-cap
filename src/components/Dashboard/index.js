@@ -22,7 +22,7 @@ import { mainListItems } from "../ListItems";
 import axios from "axios";
 import Markets from "../Markets";
 import Exchanges from "../Exchanges";
-import request from "../../Request"
+import request from "../../Request";
 import Chart from "../Chart";
 
 //import Chart from './Chart';
@@ -59,8 +59,8 @@ const AppBar = styled(MuiAppBar, {
   }),
   ...(open && {
     marginLeft: drawerWidth,
-   // width: `calc(100% - ${drawerWidth}px)`,
-   width:'100%',
+    // width: `calc(100% - ${drawerWidth}px)`,
+    width: "100%",
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -95,7 +95,6 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 function DashboardContent() {
- 
   const [open, setOpen] = useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
@@ -112,6 +111,9 @@ function DashboardContent() {
   //call
   const [market, setMarket] = useState([]);
   const [exchanges, setExchanges] = useState([]);
+  const [selectedMarket, setSelectedMarket] = useState({});
+  const [selectedExchange, setSelectedExchange] = useState({});
+
   useEffect(() => {
     async function fetchData() {
       const res = await axios.get("/markets");
@@ -129,9 +131,15 @@ function DashboardContent() {
   }, []);
 
   useEffect(() => {
-    setMarket(market);
     setExchanges(exchanges);
-  }, [exchanges , market]);
+    setSelectedExchange(exchanges[0])
+  }, [exchanges]);
+
+  useEffect(() => {
+    setMarket(market);
+    setSelectedMarket(market[0])
+  }, [market]);
+
   return (
     <ThemeProvider theme={mdTheme}>
       <Paper>
@@ -203,20 +211,7 @@ function DashboardContent() {
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
               <Grid container spacing={3}>
                 {/* Chart */}
-                <Grid item xs={12} md={8} lg={9}>
-                  <Paper
-                    sx={{
-                      p: 2,
-                      display: "flex",
-                      flexDirection: "column",
-                      height: "auto",
-                    }}
-                  >
-                    {/* <Chart /> */}
-                    <Exchanges data={exchanges} />
-                  </Paper>
-                </Grid>
-                {/* Recent Deposits */}
+
                 <Grid item xs={12} md={4} lg={3}>
                   <Paper
                     sx={{
@@ -227,16 +222,44 @@ function DashboardContent() {
                     }}
                   >
                     {/* <Deposits /> */}
-                    <Markets data={market}/>
+                    <Markets
+                      data={market}
+                      setSelectedMarket={setSelectedMarket}
+                    />
                   </Paper>
                 </Grid>
+                <Grid item xs={12} md={8} lg={9}>
+                  <Paper
+                    sx={{
+                      p: 2,
+                      display: "flex",
+                      flexDirection: "column",
+                      height: "auto",
+                    }}
+                  >
+                    {/* <Chart /> */}
+                    <Exchanges 
+                    data={exchanges}
+                    setSelectedExchange={setSelectedExchange} />
+                  </Paper>
+                </Grid>
+                {/* Recent Deposits */}
+
                 {/* Recent Orders */}
                 <Grid item xs={12}>
                   <Paper
                     sx={{ p: 2, display: "flex", flexDirection: "column" }}
                   >
                     {/* <Orders /> */}
-                    <Chart/>
+
+                    <Chart
+                      market={market}
+                      selectedMarket={selectedMarket}
+                      setSelectedMarket={setSelectedMarket}
+                      exchanges={exchanges}
+                      selectedExchange={selectedExchange}
+                      setSelectedExchange={setSelectedExchange}
+                    />
                   </Paper>
                 </Grid>
               </Grid>
