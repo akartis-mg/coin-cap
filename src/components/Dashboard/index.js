@@ -21,7 +21,9 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import { mainListItems } from "../ListItems";
 import axios from "axios";
 import Markets from "../Markets";
+import Exchanges from "../Exchanges";
 import request from "../../Request"
+import Chart from "../Chart";
 
 //import Chart from './Chart';
 //import Deposits from './Deposits';
@@ -57,7 +59,8 @@ const AppBar = styled(MuiAppBar, {
   }),
   ...(open && {
     marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
+   // width: `calc(100% - ${drawerWidth}px)`,
+   width:'100%',
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -92,7 +95,7 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 function DashboardContent() {
-  const [exchanges, setExchanges] = useState();
+ 
   const [open, setOpen] = useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
@@ -107,18 +110,28 @@ function DashboardContent() {
   });
 
   //call
+  const [market, setMarket] = useState([]);
+  const [exchanges, setExchanges] = useState([]);
   useEffect(() => {
     async function fetchData() {
-      /*const res = await axios.get(request.fetchExchanges);
-      setExchanges(res.data);
-      console.log("test" ,exchanges);
-
-      return res;*/
+      const res = await axios.get("/markets");
+      setMarket(res.data.data);
     }
-
-    //fetchData();
+    fetchData();
   }, []);
 
+  useEffect(() => {
+    async function fetchData() {
+      const res = await axios.get("/exchanges");
+      setExchanges(res.data.data);
+    }
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    setMarket(market);
+    setExchanges(exchanges);
+  }, [exchanges , market]);
   return (
     <ThemeProvider theme={mdTheme}>
       <Paper>
@@ -158,7 +171,7 @@ function DashboardContent() {
               />
             </Toolbar>
           </AppBar>
-          <Drawer variant="permanent" open={open}>
+          {/* <Drawer variant="permanent" open={open}>
             <Toolbar
               sx={{
                 display: "flex",
@@ -173,7 +186,7 @@ function DashboardContent() {
             </Toolbar>
             <Divider />
             <List>{mainListItems}</List>
-          </Drawer>
+          </Drawer> */}
           <Box
             component="main"
             sx={{
@@ -196,11 +209,11 @@ function DashboardContent() {
                       p: 2,
                       display: "flex",
                       flexDirection: "column",
-                      height: 240,
+                      height: "auto",
                     }}
                   >
                     {/* <Chart /> */}
-                    <Markets />
+                    <Exchanges data={exchanges} />
                   </Paper>
                 </Grid>
                 {/* Recent Deposits */}
@@ -210,10 +223,11 @@ function DashboardContent() {
                       p: 2,
                       display: "flex",
                       flexDirection: "column",
-                      height: 240,
+                      height: "auto",
                     }}
                   >
                     {/* <Deposits /> */}
+                    <Markets data={market}/>
                   </Paper>
                 </Grid>
                 {/* Recent Orders */}
@@ -222,6 +236,7 @@ function DashboardContent() {
                     sx={{ p: 2, display: "flex", flexDirection: "column" }}
                   >
                     {/* <Orders /> */}
+                    <Chart/>
                   </Paper>
                 </Grid>
               </Grid>
