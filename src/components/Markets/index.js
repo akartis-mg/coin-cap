@@ -11,7 +11,6 @@ import axios from "axios";
 function Markets({ data, setSelectedMarket }) {
 
 
-
   return (
     <>
       <TableContainer sx={{ maxHeight: 300 }}>

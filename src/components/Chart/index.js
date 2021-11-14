@@ -11,6 +11,8 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Grid from "@mui/material/Grid";
+import LastTradedPrice from "../LastTradedPrice";
+
 export default function Chart({
   market,
   selectedMarket,
@@ -18,6 +20,7 @@ export default function Chart({
   exchanges,
   selectedExchange,
   setSelectedExchange,
+  price,
 }) {
   const chartContainerRef = useRef();
   const chart = useRef();
@@ -184,7 +187,24 @@ export default function Chart({
             </Grid>
           </Grid>
         </TabPanel>
-        <TabPanel value="2">Prices</TabPanel>
+        <TabPanel value="2">
+          {/* <FormControl style={{ margin: 10 }} sx={{ m: 1, minWidth: 120 }}>
+            <InputLabel id="demo-simple-select-label">Exchange</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={selectedExchange}
+              label="Exchange"
+              onChange={handleChangeExchange}
+            >
+              {exchanges &&
+                exchanges.map((ex) => (
+                  <MenuItem value={ex}>{ex.name}</MenuItem>
+                ))}
+            </Select>
+          </FormControl> */}
+          <LastTradedPrice tab={value} selectedExchange={selectedExchange} />
+        </TabPanel>
       </TabContext>
     </Box>
   );
