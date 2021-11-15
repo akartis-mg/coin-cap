@@ -15,6 +15,7 @@ function LastTradedPrice({ tab, selectedExchange }) {
   // const endPoint = `wss://ws.coincap.io/trades/${selectedExchange.exchangeId}`;
   const endPoint = `wss://ws.coincap.io/trades/binance`;
   const client = useRef(null);
+
   useEffect(() => {
     client.current = new W3CWebSocket(endPoint);
 
@@ -35,11 +36,11 @@ function LastTradedPrice({ tab, selectedExchange }) {
   }, []);
 
   useEffect(() => {
-    //console.log(price);
     if (tab == "2") {
       const objIndex = price.findIndex(
         (obj) => obj.base == priceNew.base && obj.quote == priceNew.quote
       );
+
       if (objIndex != -1) {
         price[objIndex].price = priceNew.price;
       } else {
@@ -54,7 +55,6 @@ function LastTradedPrice({ tab, selectedExchange }) {
         <Table stickyHeader size="small">
           <TableHead>
             <TableRow>
-
               <TableCell>Base</TableCell>
               <TableCell>Quote</TableCell>
               <TableCell>Price</TableCell>
@@ -62,14 +62,15 @@ function LastTradedPrice({ tab, selectedExchange }) {
           </TableHead>
           <TableBody>
             {price &&
-              price.map((m, i) => (
-                <TableRow key={i} hover>
+              price
+                .map((m, i) => (
+                  <TableRow key={i} hover>
 
-                  <TableCell>{m.base}</TableCell>
-                  <TableCell>{m.quote}</TableCell>
-                  <TableCell>{m.price}</TableCell>
-                </TableRow>
-              ))}
+                    <TableCell>{m.base}</TableCell>
+                    <TableCell>{m.quote}</TableCell>
+                    <TableCell>{m.price}</TableCell>
+                  </TableRow>
+                ))}
           </TableBody>
         </Table>
       </TableContainer>

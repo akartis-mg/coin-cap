@@ -124,6 +124,7 @@ export default function Chart({
     return () => resizeObserver.current.disconnect();
   }, []);
 
+
   const handleChangeMarket = (event) => {
     setSelectedMarket(event.target.value);
   };
