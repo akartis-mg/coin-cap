@@ -84,7 +84,6 @@ export default function Chart({
     const cdata = res.data.data
       .sort((a, b) => (a.period > b.period ? 1 : -1))
       .map((d) => {
-        //console.log(parseFloat(formatPercent(d.open)))
         return {
           time: d.period / 1000,
           open: parseFloat(formatPercent(d.open)),

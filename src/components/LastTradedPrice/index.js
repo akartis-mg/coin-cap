@@ -15,7 +15,6 @@ function LastTradedPrice({ tab, selectedExchange }) {
   // const endPoint = `wss://ws.coincap.io/trades/${selectedExchange.exchangeId}`;
   const endPoint = `wss://ws.coincap.io/trades/binance`;
   const client = useRef(null);
-  console.log("segfe", endPoint);
   useEffect(() => {
     client.current = new W3CWebSocket(endPoint);
 
@@ -55,7 +54,7 @@ function LastTradedPrice({ tab, selectedExchange }) {
         <Table stickyHeader size="small">
           <TableHead>
             <TableRow>
-           
+
               <TableCell>Base</TableCell>
               <TableCell>Quote</TableCell>
               <TableCell>Price</TableCell>
@@ -65,7 +64,7 @@ function LastTradedPrice({ tab, selectedExchange }) {
             {price &&
               price.map((m, i) => (
                 <TableRow key={i} hover>
-                
+
                   <TableCell>{m.base}</TableCell>
                   <TableCell>{m.quote}</TableCell>
                   <TableCell>{m.price}</TableCell>

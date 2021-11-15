@@ -9,7 +9,7 @@ import TableContainer from "@mui/material/TableContainer";
 import axios from "axios";
 
 function Markets({ data, setSelectedMarket }) {
-
+  const formatPercent = (number) => `${new Number(number).toFixed(2)}%`;
 
   return (
     <>
@@ -18,17 +18,27 @@ function Markets({ data, setSelectedMarket }) {
           <TableHead>
             <TableRow>
               <TableCell>Symbol</TableCell>
+              <TableCell>Price Quote</TableCell>
+              <TableCell>24Hr Volume %</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {data &&
-              data.map((m ,i) => (
-                <TableRow hover key={i} onClick={()=>setSelectedMarket(m)}>
-                  <TableCell>
-                    {m.baseSymbol}/{m.quoteSymbol}
-                  </TableCell>
-                </TableRow>
-              ))}
+              data
+                .sort((a, b) => parseFloat(formatPercent(a.percentExchangeVolume)) > parseFloat(formatPercent(b.percentExchangeVolume)) ? -1 : 1)
+                .map((m, i) => (
+                  <TableRow hover key={i} onClick={() => setSelectedMarket(m)}>
+                    <TableCell>
+                      <span>{m.baseSymbol}/{m.quoteSymbol} <br />{m.exchangeId}</span>
+                    </TableCell>
+                    <TableCell>
+                      {parseFloat(formatPercent(m.priceQuote))}
+                    </TableCell>
+                    <TableCell>
+                      {parseFloat(formatPercent(m.percentExchangeVolume))}
+                    </TableCell>
+                  </TableRow>
+                ))}
           </TableBody>
         </Table>
       </TableContainer>

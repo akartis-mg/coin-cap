@@ -5,15 +5,11 @@ import MuiDrawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
 import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
-import Badge from "@mui/material/Badge";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import Link from "@mui/material/Link";
 import MenuIcon from "@mui/icons-material/Menu";
 import Switch from "@mui/material/Switch";
 import axios from "axios";
@@ -97,7 +93,7 @@ function DashboardContent() {
 
   useEffect(() => {
     async function fetchData() {
-      const res = await axios.get("https://api.coincap.io/v2/markets");
+      const res = await axios.get("/markets");
       setMarket(res.data.data);
       setSelectedMarket(res.data.data[0]);
     }
@@ -106,7 +102,7 @@ function DashboardContent() {
 
   useEffect(() => {
     async function fetchData() {
-      const res = await axios.get("https://api.coincap.io/v2/exchanges");
+      const res = await axios.get("/exchanges");
       setExchanges(res.data.data);
       setSelectedExchange(res.data.data[0]);
     }
@@ -122,6 +118,25 @@ function DashboardContent() {
     setMarket(market);
     setSelectedMarket(market[0]);
   }, [market]);
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      const res = await axios.get("/exchanges");
+      setExchanges(res.data.data);
+      setSelectedExchange(res.data.data[0]);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      const res = await axios.get("/markets");
+      setMarket(res.data.data);
+      setSelectedMarket(res.data.data[0]);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
 
   return (
     <ThemeProvider theme={mdTheme}>
