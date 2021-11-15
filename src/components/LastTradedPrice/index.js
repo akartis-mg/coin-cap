@@ -55,9 +55,9 @@ function LastTradedPrice({ tab, selectedExchange }) {
         <Table stickyHeader size="small">
           <TableHead>
             <TableRow>
-              <TableCell>Base</TableCell>
-              <TableCell>Quote</TableCell>
-              <TableCell>Price</TableCell>
+              <TableCell style={{ fontWeight: "bold" }}>Base</TableCell>
+              <TableCell style={{ fontWeight: "bold" }}>Quote</TableCell>
+              <TableCell style={{ fontWeight: "bold" }}>Price</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
