@@ -6,20 +6,23 @@ import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TableContainer from "@mui/material/TableContainer";
-import axios from "axios";
+import Title from "../Title"
+import './style.css'
+
 
 function Markets({ data, setSelectedMarket }) {
   const formatPercent = (number) => `${new Number(number).toFixed(2)}%`;
 
   return (
     <>
+      <Title data={data}>Markets</Title>
       <TableContainer sx={{ maxHeight: 300 }}>
         <Table stickyHeader size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell>Symbol</TableCell>
-              <TableCell>Price Quote</TableCell>
-              <TableCell>24Hr Volume %</TableCell>
+          <TableHead className="cell__table">
+            <TableRow >
+              <TableCell style={{ fontWeight: "bold" }}>Symbol</TableCell>
+              <TableCell style={{ fontWeight: "bold" }} >Price Quote</TableCell>
+              <TableCell style={{ fontWeight: "bold" }}>24Hr Volume %</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
