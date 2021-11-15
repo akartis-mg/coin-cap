@@ -97,7 +97,7 @@ function DashboardContent() {
 
   useEffect(() => {
     async function fetchData() {
-      const res = await axios.get("/markets");
+      const res = await axios.get("https://api.coincap.io/v2/markets");
       setMarket(res.data.data);
       setSelectedMarket(res.data.data[0]);
     }
@@ -106,7 +106,7 @@ function DashboardContent() {
 
   useEffect(() => {
     async function fetchData() {
-      const res = await axios.get("/exchanges");
+      const res = await axios.get("https://api.coincap.io/v2/exchanges");
       setExchanges(res.data.data);
       setSelectedExchange(res.data.data[0]);
     }
@@ -245,7 +245,7 @@ function DashboardContent() {
                   </Paper>
                 </Grid>
               </Grid>
-            
+
             </Container>
           </Box>
         </Box>

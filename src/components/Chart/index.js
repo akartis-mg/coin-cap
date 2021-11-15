@@ -78,7 +78,7 @@ export default function Chart({
 
   async function fetchData(baseID, quoteID, exchangeID) {
     const res = await axios.get(
-      `/candles?exchange=${exchangeID}&interval=h1&baseId=${baseID}&quoteId=${quoteID}`
+      `https://api.coincap.io/v2/candles?exchange=${exchangeID}&interval=h1&baseId=${baseID}&quoteId=${quoteID}`
     );
 
     const cdata = res.data.data
